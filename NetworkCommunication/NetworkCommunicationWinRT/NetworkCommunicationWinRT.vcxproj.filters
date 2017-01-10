@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>db7cc418-355c-46e0-a7ec-3bbcfdbc1865</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="socketCS.cpp" />
+    <ClCompile Include="TransferSocket.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="socketCS.h" />
+    <ClInclude Include="TransferSocket.h" />
+  </ItemGroup>
+</Project>
