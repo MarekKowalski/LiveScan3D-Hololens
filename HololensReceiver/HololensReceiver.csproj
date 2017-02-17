@@ -78,10 +78,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ActionManager.cs" />
     <Compile Include="Assets\ElemRenderer.cs" />
+    <Compile Include="Assets\GestureManager.cs" />
     <Compile Include="Assets\KeyboardInput.cs" />
+    <Compile Include="Assets\ObjectManipulator.cs" />
     <Compile Include="Assets\PointCloudReceiver.cs" />
     <Compile Include="Assets\PointCloudRenderer.cs" />
+    <Compile Include="Assets\Singleton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\GS Billboard.shader" />

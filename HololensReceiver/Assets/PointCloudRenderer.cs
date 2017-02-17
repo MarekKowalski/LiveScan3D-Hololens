@@ -4,17 +4,30 @@ using System.Collections.Generic;
 public class PointCloudRenderer : MonoBehaviour
 {
     public int maxChunkSize = 65535;
+    public float pointSize = 0.005f;
     public GameObject pointCloudElem;
+    public Material pointCloudMaterial;
+
     List<GameObject> elems;
 
     void Start()
     {
         elems = new List<GameObject>();
+        UpdatePointSize();
     }
 
     void Update()
     {
+        if (transform.hasChanged)
+        {
+            UpdatePointSize();
+            transform.hasChanged = false;
+        }
+    }
 
+    void UpdatePointSize()
+    {
+        pointCloudMaterial.SetFloat("_PointSize", pointSize * transform.localScale.x);
     }
 
     public void Render(float[] arrVertices, byte[] arrColors)
@@ -53,6 +66,11 @@ public class PointCloudRenderer : MonoBehaviour
         for (int i = 0; i < nElems; i++)
         {
             GameObject newElem = GameObject.Instantiate(pointCloudElem);
+            newElem.transform.parent = transform;
+            newElem.transform.localPosition = new Vector3(0.0f, 0.0f, 0.0f);
+            newElem.transform.localRotation = Quaternion.identity;
+            newElem.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+
             elems.Add(newElem);
         }            
     }

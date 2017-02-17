@@ -5,7 +5,7 @@ Shader "Custom/GS Billboard"
 {
 	Properties
 	{
-		_Size("Size", Range(0, 0.1)) = 0.01
+		_PointSize("PointSize", Range(0, 0.1)) = 0.01
 	}
 
 	SubShader
@@ -42,7 +42,7 @@ Shader "Custom/GS Billboard"
 		// Vars															*
 		// **************************************************************
 
-		float _Size;
+		float _PointSize;
 
 		// **************************************************************
 		// Shader Programs												*
@@ -69,7 +69,7 @@ Shader "Custom/GS Billboard"
 			look = normalize(look);
 			float3 right = cross(up, look);
 
-			float halfS = 0.5f * _Size;
+			float halfS = 0.5f * _PointSize;
 
 			float4 v[4];
 			v[0] = float4(p[0].pos + halfS * right - halfS * up, 1.0f);
