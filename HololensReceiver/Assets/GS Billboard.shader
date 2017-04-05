@@ -77,21 +77,20 @@ Shader "Custom/GS Billboard"
 			v[2] = float4(p[0].pos - halfS * right - halfS * up, 1.0f);
 			v[3] = float4(p[0].pos - halfS * right + halfS * up, 1.0f);
 
-			float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
 			FS_INPUT pIn;
-			pIn.pos = mul(vp, v[0]);
+			pIn.pos = UnityObjectToClipPos(v[0]);
 			pIn.col = p[0].col;
 			triStream.Append(pIn);
 
-			pIn.pos = mul(vp, v[1]);
+			pIn.pos = UnityObjectToClipPos(v[1]);
 			pIn.col = p[0].col;
 			triStream.Append(pIn);
 
-			pIn.pos = mul(vp, v[2]);
+			pIn.pos = UnityObjectToClipPos(v[2]);
 			pIn.col = p[0].col;
 			triStream.Append(pIn);
 
-			pIn.pos = mul(vp, v[3]);
+			pIn.pos = UnityObjectToClipPos(v[3]);
 			pIn.col = p[0].col;
 			triStream.Append(pIn);
 		}
