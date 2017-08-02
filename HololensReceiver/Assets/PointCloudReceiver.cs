@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System;
 using System.Collections;
+using System.Linq;
 
 #if WINDOWS_UWP
 using NetworkCommunication;
@@ -36,7 +37,9 @@ public class PointCloudReceiver : MonoBehaviour
 
         float[] vertices;
         byte[] colors;
-
+        int[] triangles;
+        int[] chunksVertices;
+        int[] chunksTriangles;
         if (bReadyForNextFrame)
         {
             Debug.Log("Requesting frame");
@@ -51,13 +54,14 @@ public class PointCloudReceiver : MonoBehaviour
         }
 
 #if WINDOWS_UWP
-        if (socket.GetFrame(out vertices, out colors))
-    #else
-        if (ReceiveFrame(out vertices, out colors))
+        if (socket.GetFrame(out vertices, out colors, out triangles, out chunksVertices, out chunksTriangles))
+#else
+        if (ReceiveFrame(out vertices, out colors,out triangles, out chunksVertices, out chunksTriangles))
     #endif
         {
             Debug.Log("Frame received");
-            pointCloudRenderer.Render(vertices, colors);
+            Debug.Log("max and min of index: " + triangles.Max() + "   " + triangles.Min() + " " + triangles.Length);
+            pointCloudRenderer.Render(vertices, colors, triangles, chunksVertices,chunksTriangles);
             bReadyForNextFrame = true;
         }
     }
@@ -94,27 +98,51 @@ public class PointCloudReceiver : MonoBehaviour
         return BitConverter.ToInt32(buffer, 0);
     }
 
-    bool ReceiveFrame(out float[] lVertices, out byte[] lColors)
+    bool ReceiveFrame(out float[] lVertices, out byte[] lColors, out int[] lTriangles, out int[] chunksVertices, out int[] chunksTriangles)
     {
         int nPointsToRead = ReadInt();
-
-        lVertices = new float[3 * nPointsToRead];
-        short[] lShortVertices = new short[3 * nPointsToRead];
-        lColors = new byte[3 * nPointsToRead];
+        int nTrianglesToRead = ReadInt();
+        int nChunks = ReadInt();
 
 
-        int nBytesToRead = sizeof(short) * 3 * nPointsToRead;
+        chunksVertices = new int[nChunks];
+        int nBytesToRead = sizeof(int) * nChunks;
         int nBytesRead = 0;
         byte[] buffer = new byte[nBytesToRead];
 
         while (nBytesRead < nBytesToRead)
             nBytesRead += socket.GetStream().Read(buffer, nBytesRead, Math.Min(nBytesToRead - nBytesRead, 64000));
 
-        System.Buffer.BlockCopy(buffer, 0, lShortVertices, 0, nBytesToRead);
+        System.Buffer.BlockCopy(buffer, 0, chunksVertices, 0, nBytesToRead);
 
-        for (int i = 0; i < lShortVertices.Length; i++)
-            lVertices[i] = lShortVertices[i] / 1000.0f;
 
+
+        chunksTriangles = new int[nChunks];
+         nBytesToRead = sizeof(int) * nChunks;
+         nBytesRead = 0;
+        buffer = new byte[nBytesToRead];
+
+        while (nBytesRead < nBytesToRead)
+            nBytesRead += socket.GetStream().Read(buffer, nBytesRead, Math.Min(nBytesToRead - nBytesRead, 64000));
+
+        System.Buffer.BlockCopy(buffer, 0, chunksTriangles, 0, nBytesToRead);
+
+
+
+
+        lVertices = new float[3 * nPointsToRead];
+         nBytesToRead = sizeof(float) * 3 * nPointsToRead;
+         nBytesRead = 0;
+         buffer = new byte[nBytesToRead];
+
+        while (nBytesRead < nBytesToRead)
+            nBytesRead += socket.GetStream().Read(buffer, nBytesRead, Math.Min(nBytesToRead - nBytesRead, 64000));
+
+        System.Buffer.BlockCopy(buffer, 0, lVertices, 0, nBytesToRead);
+
+
+
+        lColors = new byte[3 * nPointsToRead];
         nBytesToRead = sizeof(byte) * 3 * nPointsToRead;
         nBytesRead = 0;
         buffer = new byte[nBytesToRead];
@@ -123,6 +151,18 @@ public class PointCloudReceiver : MonoBehaviour
             nBytesRead += socket.GetStream().Read(buffer, nBytesRead, Math.Min(nBytesToRead - nBytesRead, 64000));
 
         System.Buffer.BlockCopy(buffer, 0, lColors, 0, nBytesToRead);
+
+
+        lTriangles = new int[3 * nTrianglesToRead];
+        nBytesToRead = sizeof(int) * 3 * nTrianglesToRead;
+        nBytesRead = 0;
+        buffer = new byte[nBytesToRead];
+        //Debug.Log(nBytesToRead);
+        while (nBytesRead < nBytesToRead)
+            nBytesRead += socket.GetStream().Read(buffer, nBytesRead, Math.Min(nBytesToRead - nBytesRead, 64000));
+
+        System.Buffer.BlockCopy(buffer, 0, lTriangles, 0, nBytesToRead);
+
 
         return true;
     }
