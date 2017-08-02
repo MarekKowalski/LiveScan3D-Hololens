@@ -30,34 +30,26 @@ public class PointCloudRenderer : MonoBehaviour
         pointCloudMaterial.SetFloat("_PointSize", pointSize * transform.localScale.x);
     }
 
-    public void Render(float[] arrVertices, byte[] arrColors)
+    public void Render(float[] arrVertices, byte[] arrColors, int[] arrTriangles, int[] chunksVertices, int[] chunksTriangles)
     {
-        int nPoints, nChunks;
-        if (arrVertices == null || arrColors == null)
-        {
-            nPoints = 0;
-            nChunks = 0;
-        }
-        else
-        {
-            nPoints = arrVertices.Length / 3;
-            nChunks = 1 + nPoints / maxChunkSize;
-        }
+
         
+        int nChunks = chunksVertices.length;
+
+        int VerticesRead = 0;
+        int TrianglesRead = 0;
+
         if (elems.Count < nChunks)
             AddElems(nChunks - elems.Count);
         if (elems.Count > nChunks)
             RemoveElems(elems.Count - nChunks);
-
-        int offset = 0;
         for (int i = 0; i < nChunks; i++)
         {
-            int nPointsToRender = System.Math.Min(maxChunkSize, nPoints - offset);
 
             ElemRenderer renderer = elems[i].GetComponent<ElemRenderer>();
-            renderer.UpdateMesh(arrVertices, arrColors, nPointsToRender, offset);
-
-            offset += nPointsToRender;
+            renderer.UpdateMesh(arrVertices, arrColors, arrTriangles, VerticesRead, chunksVertices[i], TrianglesRead*3, chunksTriangles[i]);
+                  VerticesRead += chunksVertices[i];
+                  TrianglesRead += chunksTriangles[i];
         }
     }
 
