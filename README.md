@@ -7,7 +7,7 @@ You will find a short presentation of the application in the video below (click 
 ## How to get it running with LiveScan3D ##
 First of all you need to download LiveScan and get that running. Once this is done, open LiveScan, connect a client and open the live view window (it is the contents of that window that are streamed to Hololens). Next start the Unity application on the same machine as the server, if everything is fine it should be working. If it is not working, let me know and I will try to fix it.
 
-If you got this far, getting it to work on Hololens should be easy, just make sure you deploy the app using XAML UWP build type instead of D3D (this is required by the touch keyboard). Once you deploy and start the app on Hololens all you need to do is input the IP number of the server and you should see the point cloud.
+If you got this far, getting it to work on Hololens should be easy, just make sure you deploy the app using XAML UWP build type instead of D3D (this is required by the touch keyboard). Once you deploy and start the app on Hololens all you need to do is input the IP number of the server and you should see the point cloud. If there are issues try rebuilding NetworkCommunication in the Release mode, the resulting dll files should be automatically copied to /Assets/Plugins/x86/
 
 ## How to control the scene ##
 The scene can be moved, scaled and rotated around the Y axis, the modes are chosen using the following voice commands:
