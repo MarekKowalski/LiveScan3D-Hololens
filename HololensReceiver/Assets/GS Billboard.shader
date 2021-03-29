@@ -25,16 +25,26 @@ Shader "Custom/GS Billboard"
 		// **************************************************************
 		// Data structures												*
 		// **************************************************************
+		struct appdata
+		{
+			float4 vertex : POSITION;
+			float4 color : COLOR; 
+			UNITY_VERTEX_INPUT_INSTANCE_ID
+		};
+
 		struct GS_INPUT
 		{
 			float4	pos		: POSITION;
 			float4	col		: COLOR;
+			UNITY_VERTEX_INPUT_INSTANCE_ID
 		};
 
 		struct FS_INPUT
 		{
 			float4	pos		: POSITION;
 			float4  col		: COLOR;
+			UNITY_VERTEX_INPUT_INSTANCE_ID
+			UNITY_VERTEX_OUTPUT_STEREO
 		};
 
 
@@ -49,9 +59,13 @@ Shader "Custom/GS Billboard"
 		// **************************************************************
 
 		// Vertex Shader ------------------------------------------------
-		GS_INPUT VS_Main(appdata_full v)
+		GS_INPUT VS_Main(appdata v)
 		{
-			GS_INPUT output = (GS_INPUT)0;
+			GS_INPUT output;
+
+			UNITY_INITIALIZE_OUTPUT(GS_INPUT, output);
+			UNITY_SETUP_INSTANCE_ID(v);
+			UNITY_TRANSFER_INSTANCE_ID(v, output);
 
 			output.pos = mul(unity_ObjectToWorld, v.vertex);
 			output.col = v.color;
@@ -77,7 +91,14 @@ Shader "Custom/GS Billboard"
 			v[2] = float4(p[0].pos - halfS * right - halfS * up, 1.0f);
 			v[3] = float4(p[0].pos - halfS * right + halfS * up, 1.0f);
 
+
 			FS_INPUT pIn;
+
+			UNITY_INITIALIZE_OUTPUT(FS_INPUT, pIn);
+			UNITY_SETUP_INSTANCE_ID(p[0]);
+			UNITY_TRANSFER_INSTANCE_ID(p[0], pIn);
+			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(pIn);
+
 			pIn.pos = UnityObjectToClipPos(v[0]);
 			pIn.col = p[0].col;
 			triStream.Append(pIn);
@@ -98,6 +119,7 @@ Shader "Custom/GS Billboard"
 		// Fragment Shader -----------------------------------------------
 		float4 FS_Main(FS_INPUT input) : COLOR
 		{
+			UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 			return input.col;
 		}
 

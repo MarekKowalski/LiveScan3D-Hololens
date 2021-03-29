@@ -97,6 +97,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <TargetName>NetworkCommunication</TargetName>
     <GenerateManifest>false</GenerateManifest>
+    <OutDir>$(SolutionDir)\$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -144,7 +146,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)\$(Configuration)\$(TargetName).dll $(SolutionDir)\..\HololensReceiver\Assets\Plugins\x86\
-copy $(SolutionDir)\$(Configuration)\$(TargetName).winmd $(SolutionDir)\..\HololensReceiver\Assets\Plugins\x86\</Command>
+copy $(SolutionDir)\$(Configuration)\$(TargetName).winmd $(SolutionDir)\..\HololensReceiver\Assets\Plugins\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -162,8 +164,8 @@ copy $(SolutionDir)\$(Configuration)\$(TargetName).winmd $(SolutionDir)\..\Holol
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)\$(Configuration)\$(TargetName).dll $(SolutionDir)\..\HololensReceiver\Assets\Plugins\x86\
-copy $(SolutionDir)\$(Configuration)\$(TargetName).winmd $(SolutionDir)\..\HololensReceiver\Assets\Plugins\x86\</Command>
+      <Command>copy $(SolutionDir)\$(Configuration)\$(TargetName).dll $(SolutionDir)\..\HololensReceiver\Assets\Plugins\ARM64\
+copy $(SolutionDir)\$(Configuration)\$(TargetName).winmd $(SolutionDir)\..\HololensReceiver\Assets\Plugins\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

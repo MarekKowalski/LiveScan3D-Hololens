@@ -13,13 +13,13 @@ public class KeyboardInput : MonoBehaviour {
 
     void Start ()
     {
-#if WINDOWS_UWP
-        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, false, false, titleText);
-#else
+//#if WINDOWS_UWP
+//        keyboard = TouchScreenKeyboard.Open("", TouchScreenKeyboardType.Default, false, false, false, false, titleText);
+//#else
         //Just for testing in the editor
         if (keyboardDone != null)
-            keyboardDone.Invoke("127.0.0.1");
-#endif
+            keyboardDone.Invoke("192.168.1.10");
+//#endif
     }
 	
 	void Update ()
